@@ -10,9 +10,8 @@ public class Main {
         char[] source2 = main.mapping(keyInt, source1);
         
         String cipherText = main.encryption(source1, source2, plainText);
-        System.out.print("Plaintext: " +plainText+", key: ");
-        for (Integer key : keyInt) System.out.print(key);
-        System.out.println(", Cipher: "+cipherText);
+        System.out.println("Plaintext: " +plainText);
+        System.out.println("Cipher: "+cipherText);
         String ps = main.encryption(source2, source1, cipherText);
         System.out.println("Plaintext: " +ps);
     }
@@ -36,6 +35,7 @@ public class Main {
          char[] cc = new char[pc.length];
          for (int i=0;i<pc.length;i++){
              int idx = getIdx(s0,pc[i]);
+             
              cc[i] = s1[idx];
          }
          return chartString(cc);
@@ -59,8 +59,6 @@ public class Main {
      }
 
     public char[] mapping(Integer[] k, char[] source1){
-        char[] source2 = new char[source1.length];
-        char[] source3 = new char[source1.length];
         int equationAmount, equationSum = 0, shifterLength = 0, temp, temp2 = 1;
         if(k.length%4==0) equationAmount = k.length/4;
         else equationAmount = k.length/4+1;
@@ -92,27 +90,24 @@ public class Main {
         }
 
         char[] temp3;
+        char[][] sources = new char[shifters.length][source1.length];
         for(int i=0; i<shifters.length;i++){
             temp = shifters[i];
-            if (i%2==0) {
-                if(i==0) temp3 = source1;
-                else temp3 = source3;
-                for (char c : temp3) {
-                    temp3[temp] = c;
-                    temp++;
-                    if (temp == source1.length) temp = 0;
-                }
-            } else {
-                temp3 = source2;
-                for (char c : temp3) {
-                    temp3[temp] = c;
-                    temp++;
-                    if (temp == source1.length) temp = 0;
-                }
+            if(i==0) temp3 = source1;
+            else temp3 = sources[i-1];
+            for (char c : temp3){
+                sources[i][temp]= c;
+                temp++;
+                if (temp == source1.length) temp = 0;
             }
         }
-        if (shifters.length%2==1) return source2;
-        else return source3;
+
+        char[] result = new char[0];
+        for(int i=0;i<sources.length;i++){
+            if(i==0) result = sources[i];
+            else for(int j=0;j<source1.length;j++) result[j] = (char) ((int) sources[i][j] ^ (equationSum % (int) Math.pow(2, 16)));
+        }
+        return result;
     }
 
      public char[] generateSource(){
