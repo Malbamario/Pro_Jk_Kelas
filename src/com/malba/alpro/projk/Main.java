@@ -60,6 +60,7 @@ public class Main {
 
     public char[] mapping(Integer[] k, char[] source1){
         char[] source2 = new char[source1.length];
+        char[] source3 = new char[source1.length];
         int equationAmount, equationSum = 0, shifterLength = 0, temp, temp2 = 1;
         if(k.length%4==0) equationAmount = k.length/4;
         else equationAmount = k.length/4+1;
@@ -90,16 +91,28 @@ public class Main {
             temp /= Math.pow(10, i+1);
         }
 
-        for(int shifter:shifters){
-            temp = shifter;
-            for (char c : source1) {
-                source2[temp] = c;
-                temp++;
-                if (temp == source1.length) temp = 0;
+        char[] temp3;
+        for(int i=0; i<shifters.length;i++){
+            temp = shifters[i];
+            if (i%2==0) {
+                if(i==0) temp3 = source1;
+                else temp3 = source3;
+                for (char c : temp3) {
+                    temp3[temp] = c;
+                    temp++;
+                    if (temp == source1.length) temp = 0;
+                }
+            } else {
+                temp3 = source2;
+                for (char c : temp3) {
+                    temp3[temp] = c;
+                    temp++;
+                    if (temp == source1.length) temp = 0;
+                }
             }
         }
-
-        return source2;
+        if (shifters.length%2==1) return source2;
+        else return source3;
     }
 
      public char[] generateSource(){
