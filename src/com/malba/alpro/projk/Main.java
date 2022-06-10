@@ -102,10 +102,16 @@ public class Main {
             }
         }
 
-        char[] result = new char[0];
-        for(int i=0;i<sources.length;i++){
-            if(i==0) result = sources[i];
-            else for(int j=0;j<source1.length;j++) result[j] = (char) ((int) sources[i][j] ^ (equationSum % (int) Math.pow(2, 16)));
+        char[] result = sources[0];
+        for(int i=1;i<sources.length;i++){
+            for(int j=0;j<source1.length;j++) result[j] = (char) (limiter((int) result[j] + (int) sources[i][j]));
+        }
+        for(int i=0;i< result.length;i++){
+            int resultxEquationSum = (result[i] ^ limiter(equationSum));
+            for (char r : result) {
+                if (r == resultxEquationSum) resultxEquationSum = limiter(resultxEquationSum + equationSum);
+            }
+            result[i] = (char) resultxEquationSum;
         }
         return result;
     }
@@ -113,5 +119,9 @@ public class Main {
      public char[] generateSource(){
          String s = "abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]\\;',./{}|:\"<>?`~";
          return s.toCharArray();
+     }
+
+     public int limiter(int i){
+        return i % (int) Math.pow(2, 16);
      }
 }
