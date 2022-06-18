@@ -121,7 +121,5 @@ public class Main {
          return s.toCharArray();
      }
 
-     public int limiter(int i){
-        return i % (int) Math.pow(2, 16);
-     }
+     public int limiter(int i){ return i % (int) Math.pow(2, 16); }
 }
